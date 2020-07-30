@@ -19,11 +19,21 @@ def create_generator(coco, mode, add, object_dim, **kwargs):
 	# Make sure that each training and testing set is the same for comparison.
 	np.random.seed(7)
 
-
+	from datetime import datetime
+	progress = 0
+        
 	if mode == 'training':
 
 		while True:
 
+			if progress % 10_000 == 0:                        
+				print(datetime.now(), 'working on step:', progress)
+
+			if progress == 30_000:
+                                pass # return
+			                        
+			progress += 1
+        
 			cat_id_index = np.random.choice(range(0,80))
 
 			gt_vector = np.eye(80)[cat_id_index:cat_id_index+1][0]

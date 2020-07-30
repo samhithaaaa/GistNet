@@ -10,8 +10,8 @@ from keras.optimizers import Adam
 
 def train(add, num_testing, object_dim, job_name, **kwargs):
 
-	coco_train = COCO('../annotations/instances_train2014.json')
-	coco_test = COCO('../annotations/instances_val2014.json')
+	coco_train = COCO('./annotations/instances_train2014.json')
+	coco_test = COCO('./annotations/instances_val2014.json')
 
 	training_generator = create_generator(coco = coco_train, mode = 'training', add = add, object_dim = object_dim, **kwargs)
 	testing_generator = create_generator(coco = coco_test, mode = 'testing', add = add, object_dim = object_dim, **kwargs)
@@ -20,7 +20,7 @@ def train(add, num_testing, object_dim, job_name, **kwargs):
 
 	model.compile(loss = 'categorical_crossentropy', optimizer = Adam(1e-6, beta_1=.9, beta_2=.99), metrics = ['accuracy'])
 
-	callbacks_list = [ModelCheckpoint('../model_weights/'+job_name+'.h5', monitor='val_loss', verbose=1, save_best_only=True, mode='min')]
+	callbacks_list = [ModelCheckpoint('./'+job_name+'.h5', monitor='val_loss', verbose=1, save_best_only=True, mode='min')]
 
 	print(model.summary())
 
@@ -28,19 +28,20 @@ def train(add, num_testing, object_dim, job_name, **kwargs):
 		training_generator, \
 		validation_steps = num_testing, \
 		validation_data = testing_generator, \
-		steps_per_epoch = 5000, \
-		epochs = 500, \
+		steps_per_epoch = 2, # 5, # 5000, \
+		epochs = 2, # 500, \
 		callbacks = callbacks_list,\
-		verbose=2, \
-		max_queue_size = 10, \
-		workers = 1, \
+		verbose=1, \
+		max_queue_size = 1, # 10, \
+		workers = 2, \
 		)
 
 if __name__ == '__main__':
 
 	add = None
+	add = 'gist'
 
-	num_testing = 1000
+	num_testing = 2 # 10 # 1000
 
 	object_dim = 224
 
